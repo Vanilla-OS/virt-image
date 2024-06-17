@@ -1,0 +1,96 @@
+name: Virt
+id: virt
+stages:
+- id: build
+  base: ghcr.io/vanilla-os/pico:main
+  singlelayer: false
+  labels:
+    maintainer: Vanilla OS Contributors
+  args:
+    DEBIAN_FRONTEND: noninteractive
+  runs:
+  - echo 'APT::Install-Recommends "1";' > /etc/apt/apt.conf.d/01norecommends
+
+  modules:
+    - name: virt-dependencies
+      type: apt
+      source:
+        packages:
+        - virt-manager
+        - openssh-server
+        - libvirt-daemon-system
+        - libvirt-clients
+        - qemu-system qemu-utils
+
+    - name: distrobox-init-pkgs
+      type: apt
+      source:
+        packages:
+          - apt-utils
+          - bash-completion
+          - bc
+          - bzip2
+          - curl
+          - dialog
+          - diffutils
+          - findutils
+          - iproute2
+          - gnupg
+          - gnupg2
+          - gpgsm
+          - libkrb5-3
+          - libcap2-bin
+          - hostname
+          - iputils-ping
+          - less
+          - keyutils
+          - libnss-mdns
+          - libnss-myhostname
+          - libvte-2.9*-common
+          - libvte-common
+          - locales
+          - locales-all
+          - man-db
+          - manpages
+          - mtr
+          - lsof
+          - ncurses-base
+          - passwd
+          - pinentry-curses
+          - openssh-client
+          - procps
+          - sudo
+          - pigz
+          - time
+          - rsync
+          - tzdata
+          - util-linux
+          - wget
+          - unzip
+          - zip
+          - xauth
+          - tree
+          - tcpdump
+          - traceroute
+          - xz-utils
+          - libgl1
+          - libegl1
+          - libglx-mesa0
+          - libvulkan1
+          - mesa-vulkan-drivers
+
+    - name: usb-share-fix
+      type: shell
+      commands:
+        - cp  /usr/share/polkit-1/actions/_org.spice-space.lowlevelusbaccess.policy  /usr/share/polkit-1/actions/org.spice-space.lowlevelusbaccess.policy
+
+    - name: enable-systemd-units
+      type: shell
+      commands:
+        - ln -s /lib/systemd/system/sshd.service /etc/systemd/system/multi-user.target.wants/sshd.service
+        - ln -s /lib/systemd/system/libvirtd.service /etc/systemd/system/multi-user.target.wants/libvirtd.service
+
+    - name: set-libvirt-group
+      type: shell
+      commands:
+        - chmod +x /etc/profile.d/add_libvirt_group.sh
