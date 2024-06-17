@@ -84,12 +84,6 @@ stages:
       commands:
         - cp  /usr/share/polkit-1/actions/_org.spice-space.lowlevelusbaccess.policy  /usr/share/polkit-1/actions/org.spice-space.lowlevelusbaccess.policy
 
-    - name: enable-systemd-units
-      type: shell
-      commands:
-        - ln -s /lib/systemd/system/sshd.service /etc/systemd/system/multi-user.target.wants/sshd.service
-        - ln -s /lib/systemd/system/libvirtd.service /etc/systemd/system/multi-user.target.wants/libvirtd.service
-
     - name: set-libvirt-group
       type: shell
       commands:
