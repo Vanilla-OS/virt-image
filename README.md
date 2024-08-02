@@ -31,7 +31,7 @@ podman image build -t vanillaos/virt .
 > The container needs to be rootfull.
 
 ```bash
-distrobox create --root --init --unshare-all -i ghcr.io/vanilla-os/virt:main -n virt # replace with your local image if you built it
+distrobox create --root --init --unshare-groups --unshare-ipc --unshare-netns --unshare-process -i ghcr.io/vanilla-os/virt:main -n virt # replace with your local image if you built it
 distrobox enter --root virt
 ```
 
